@@ -16,7 +16,7 @@ cursor = conn.cursor()
 # update для дочерних таблиц.
 # добавить LIKE для всех полей ввода к запросу where ( ... where tel like '%запрос%' ).
 
-class ExampleApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
+class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 	def __init__(self):
 		super().__init__()
 		self.setupUi(self)
@@ -202,7 +202,7 @@ class ExampleApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 
 def main():
 	app = QtWidgets.QApplication(sys.argv)
-	window = ExampleApp()
+	window = MainApp()
 	window.show()
 	app.exec_()
 
