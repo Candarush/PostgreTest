@@ -30,7 +30,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 	def update(self):
 		self.update_table()
 
-	'''Открыть редактирование атрибута таблички, при условии если никое другое диалоговое окно не открыто.'''
+	'''Открыть редактирование атрибута таблички, при условии если никакое другое диалоговое окно не открыто.'''
 	def showdialog(self, tablename, attributename):
 		if hasattr(self, 'msg') and self.msg.isVisible(): return
 		self.msg = AddNewPopup(self, tablename, attributename)
