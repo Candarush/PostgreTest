@@ -16,6 +16,8 @@ cursor = conn.cursor()
 # update для дочерних таблиц.
 # добавить LIKE для всех полей ввода к запросу where ( ... where tel like '%запрос%' ).
 
+
+'''Главное окошко пользовательского интерфейса.'''
 class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 	def __init__(self):
 		super().__init__()
@@ -24,13 +26,16 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		self.update()
 		self.to_start_screen()
 
+	'''Обновить главную таблицу и выпадающие списки.'''
 	def update(self):
 		self.update_table()
 
+	'''Открыть редактирование атрибута таблички, при условии если никое другое диалоговое окно не открыто.'''
 	def showdialog(self, tablename, attributename):
 		if hasattr(self, 'msg') and self.msg.isVisible(): return
 		self.msg = AddNewPopup(self, tablename, attributename)
 
+	'''Установить функцию клика на кнопку на необходимую функцию редактирования атрибута (для кажой кнопки).'''
 	def setup_buttons(self):
 		self.CloseButton.clicked.connect(lambda: self.close_app())
 		self.NewEntryButton.clicked.connect(lambda: self.add_new_entry())
@@ -39,12 +44,14 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		self.FindEntryButton.clicked.connect(lambda: self.search_entry())
 		self.ClearEntryButton.clicked.connect(lambda: self.to_start_screen())
 
+	'''Закрыть это окошко и все диалоговые окна.'''
 	def close_app(self):
 		if hasattr(self, 'msg'):
 			if self.msg.isVisible():
 				self.msg.close()
 		self.close()
 
+	'''Удалить запись из главной таблицы. Выбор происходит через выделение строчки в главной таблице.'''
 	def remove_entry(self):
 		if len(self.MainTable.selectionModel().selectedRows()) == 1:
 			cursor.execute("delete from main where u_id = %d" % int(self.MainTable.model().data(self.MainTable.selectionModel().selectedRows()[0])))
@@ -53,7 +60,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 			return
 		QMessageBox.warning(self, "Ошибка", "Полностью выделите нужную строку для удаления.")
 
-
+	'''Добавить новую запись в главную таблицу по заданным значениям в выпадающих списках и полях ввода. Если что-то пошло не так выдать всплывающее окно.'''
 	def add_new_entry(self):
 		try:
 			if  self.familiaBox.currentText()[0] == ' ' or \
@@ -80,6 +87,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		except:
 			QMessageBox.warning(self, "Ошибка", "Проверьте заполнение полей.")
 
+	'''Изменить запись главной таблицы. Выбор записи происходит через выделение строки в гл. таблице.'''
 	def change_entry(self):
 		if not len(self.MainTable.selectionModel().selectedRows()) == 1:
 			QMessageBox.warning(self, "Ошибка", "Полностью выделите нужную строку для изменения.")
@@ -87,6 +95,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		if hasattr(self, 'msg') and self.msg.isVisible(): return
 		self.msg = ChangeEntryWidnow(self, int(self.getRowData(0)), self.familiaBox, self.getRowData(1), self.nameBox, self.getRowData(2), self.otcestvoBox, self.getRowData(3), self.cityBox, self.getRowData(4), self.streetBox, self.getRowData(5), self.getRowData(7), self.getRowData(8), self.getRowData(6))
 
+	'''Поиск записей по заполненным полям и выпадающим спискам. При отсутвии значения в полях, они не учитываются при поиске.'''
 	def search_entry(self):
 		if hasattr(self, 'msg'):
 			if self.msg.isVisible():
@@ -125,11 +134,13 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		data = cursor.fetchall()
 		self.show_entries_from_data(data)
 
+	'''Установить текущее значение выпадающего списка на значение содержащее text.'''
 	def setComboBox(self, box, text):
 		index = box.findText(text.ljust(30));
 		if not index == -1:
 			box.setCurrentIndex(index)
 
+	'''Вернуть все к начальным значениям. Очистить поля и установить значения выпадающих списков на пустые. Выдать все записи на гл. табличке.'''
 	def to_start_screen(self):
 		self.update_table()
 		self.setComboBox(self.familiaBox,' ')
@@ -141,10 +152,11 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		self.telBox.setText('')
 		self.buildingBox.setText('')
 
+	'''Достать значение из таблики QT на выделенной строке и столбику id.'''
 	def getRowData(self, id):
 		r = self.MainTable.currentRow()
 		return self.MainTable.item(r,id).text()
-
+	'''Достать ВСЕ данные из гл. таблице Postgre.'''
 	def get_data(self):
 		cursor.execute('''
 		select u_id, fam_tab.fam, nam_tab.nam, otc_tab.otc, city_tab.city, street_tab.street, bldn, corp, tel
@@ -158,11 +170,13 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		result = cursor.fetchall()
 		return result
 
+	'''Обновить данные таблички и выпадающих списков.'''
 	def update_table(self):
 		table = self.MainTable
 		self.show_entries_from_data(self.get_data())
 		self.update_attributes()
 
+	'''Показать данные соответствующие полям и выпадающим спискам, которые выбрал пользователь.'''
 	def show_entries_from_data(self, data):
 		table = self.MainTable
 		table.setColumnCount(9)
@@ -173,6 +187,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 				table.setItem(c_entry, c_attr, QTableWidgetItem(str(data[c_entry][c_attr])))
 		table.resizeColumnsToContents()
 
+	'''Определить идентификатор атрибута по его значению.'''
 	def get_attribute_uid(self, tablename, attributename, value) -> int:
 		cursor.execute("select * from %s where %s = '%s'" % (tablename, attributename, value))
 		result = cursor.fetchone()
@@ -180,6 +195,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 			raise exception('Аттрибут не найден!')
 		return int(result[0])
 
+	'''Обновить все выпадающие списки и кнопки. Создать ссылки на названия таблички и атрибута из родительских таблиц Postgre.'''
 	def update_attributes(self):
 		self.setup_attribute(self.familiaBox, self.newFamiliaButton, 'fam_tab', 'fam')
 		self.setup_attribute(self.nameBox, self.newNameButton, 'nam_tab', 'nam')
@@ -187,13 +203,16 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		self.setup_attribute(self.cityBox, self.newCityButton, 'city_tab', 'city')
 		self.setup_attribute(self.streetBox, self.newStreetButton, 'street_tab', 'street')
 
+	'''Обновить ссылки для пары из кнопки и списка.'''
 	def setup_attribute(self, box, addnew_button, tablename, attributename):
 		self.setup_QPushButtton(addnew_button, tablename, attributename)
 		self.update_QComboBox(box, tablename, attributename)
 
+	'''Обновить ссылку на необходимый метод для кнопки.'''
 	def setup_QPushButtton(self, button, tablename, attributename):
 		button.clicked.connect(lambda: self.showdialog(tablename, attributename))
 
+	'''Обновить значения в списке.'''
 	def update_QComboBox(self, box, tablename, attributename):
 		box.clear()
 		cursor.execute('select %s from %s' % (attributename, tablename))
