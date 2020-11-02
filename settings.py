@@ -1,0 +1,4 @@
+DBNAME='tbook'
+PORT='5433'
+USER='postgres'
+PASSWORD='88888888'
