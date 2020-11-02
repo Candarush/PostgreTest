@@ -35,7 +35,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		if hasattr(self, 'msg') and self.msg.isVisible(): return
 		self.msg = AddNewPopup(self, tablename, attributename)
 
-	'''Установить функцию клика на кнопку на необходимую функцию редактирования атрибута (для кажой кнопки).'''
+	'''Установить функцию клика на кнопку на необходимый метод (для кажой кнопки).'''
 	def setup_buttons(self):
 		self.CloseButton.clicked.connect(lambda: self.close_app())
 		self.NewEntryButton.clicked.connect(lambda: self.add_new_entry())
