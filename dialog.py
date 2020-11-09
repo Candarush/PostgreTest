@@ -15,7 +15,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.setFixedSize(408, 300)
-        self.listView = QtWidgets.QListView(Dialog)
+        self.listView = QtWidgets.QListWidget(Dialog)
         self.listView.setGeometry(QtCore.QRect(10, 10, 391, 241))
         self.listView.setObjectName("listView")
         self.lineEdit = QtWidgets.QLineEdit(Dialog)
@@ -36,7 +36,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Добавление"))
+        Dialog.setWindowTitle(_translate("Dialog", "Добавление / Изменение"))
         self.newEntryButton.setText(_translate("Dialog", "+"))
         self.removeEntryButton.setText(_translate("Dialog", "-"))
         self.closeButton.setText(_translate("Dialog", "Вернуться"))

@@ -115,10 +115,10 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Телефонный справочник"))
-        self.newFamiliaButton.setText(_translate("Dialog", "+"))
-        self.newNameButton.setText(_translate("Dialog", "+"))
-        self.newOtchestvoButton.setText(_translate("Dialog", "+"))
-        self.newStreetButton.setText(_translate("Dialog", "+"))
+        self.newFamiliaButton.setText(_translate("Dialog", "..."))
+        self.newNameButton.setText(_translate("Dialog", "..."))
+        self.newOtchestvoButton.setText(_translate("Dialog", "..."))
+        self.newStreetButton.setText(_translate("Dialog", "..."))
         self.famLabel.setText(_translate("Dialog", "Фамилия"))
         self.nameLabel.setText(_translate("Dialog", "Имя"))
         self.otcLabel.setText(_translate("Dialog", "Отчество"))
@@ -127,7 +127,7 @@ class Ui_Dialog(object):
         self.telLabel.setText(_translate("Dialog", "Телефон"))
         self.NewEntryButton.setText(_translate("Dialog", "Добавить"))
         self.corpLabel.setText(_translate("Dialog", "Корпус"))
-        self.newCityButton.setText(_translate("Dialog", "+"))
+        self.newCityButton.setText(_translate("Dialog", "..."))
         self.citylabel.setText(_translate("Dialog", "Город"))
         self.DeleteEntryButton.setText(_translate("Dialog", "Удалить"))
         self.CloseButton.setText(_translate("Dialog", "Закрыть"))

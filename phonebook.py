@@ -25,6 +25,7 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		self.setup_buttons()
 		self.update()
 		self.to_start_screen()
+		self.MainTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
 	'''Обновить главную таблицу и выпадающие списки.'''
 	def update(self):
@@ -103,25 +104,25 @@ class MainApp(QtWidgets.QMainWindow, mytable.Ui_Dialog):
 		combo = {'fam' : self.get_attribute_uid('fam_tab', 'fam', self.familiaBox.currentText()), 'nam' : self.get_attribute_uid('nam_tab', 'nam', self.nameBox.currentText()), 'otc' : self.get_attribute_uid('otc_tab', 'otc', self.otcestvoBox.currentText()), 'city' : self.get_attribute_uid('city_tab', 'city', self.cityBox.currentText()), 'street' : self.get_attribute_uid('street_tab', 'street', self.streetBox.currentText())}
 		text = {'corp' : self.corpBox.toPlainText(), 'tel' : self.telBox.toPlainText(), 'bldn' : self.buildingBox.toPlainText()}
 		query = 'with res as (select * from main '
-		isFirst = False
+		isFirst = True
 		ckeys = combo.keys()
 		tkeys = text.keys()
 		for k in ckeys:
 			cursor.execute("select * from %s_tab where %s_id = %d " % (k,k[0],combo[k]))
 			fetch = cursor.fetchone()[1][0]
 			if not fetch == ' ':
-				if not isFirst:
-					isFirst = True
+				if isFirst:
+					isFirst = False
 					query = query + ('where %s = %d ' % (k, combo[k])) 
 				else: 
 					query = query + ('and %s = %d ' % (k, combo[k])) 
 		for k in tkeys:
 			if not (text[k]) == '':
-				if not isFirst:
-					isFirst = True
-					query = query + ("where %s = '%s' " % (k, text[k])) 
+				if isFirst:
+					isFirst = False
+					query = query + ("where %s like '%s' " % (k, text[k])) 
 				else: 
-					query = query + ("and %s = '%s' " % (k, text[k])) 
+					query = query + ("and %s like '%s' " % (k, text[k])) 
 		query = query + ')'
 		query = query + '''select u_id, fam_tab.fam, nam_tab.nam, otc_tab.otc, city_tab.city, street_tab.street, bldn, corp, tel 
 		from res

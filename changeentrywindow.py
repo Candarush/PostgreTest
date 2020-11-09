@@ -59,7 +59,6 @@ class ChangeEntryWidnow(QtWidgets.QMainWindow, change.Ui_Dialog):
 			self.close()
 		except:
 			pass
-
 	
 	def get_attribute_uid(self, tablename, attributename, value) -> int:
 		cursor.execute("select * from %s where %s = '%s'" % (tablename, attributename, value))
